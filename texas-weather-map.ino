@@ -1,59 +1,76 @@
 #include <WiFi.h>
+
+#include <SPI.h>
+
 #include <HTTPClient.h>
 
 #include <Adafruit_TLC5947.h>
 
-#include "tick.h"
+#include <gatltick.h>
+
 #include "types.h"
+#include "constdef.h"
+#include "gradient.h"
 #include "queries.h"
 #include "secrets.h"
-#include "parse.h"
-#include "scale.h"
-#include "color.h"
-#include "gradient.h"
 #include "range.h"
+#include "parse.h"
+#include "oled.h"
+#include "led.h"
 
-#define INTERVAL         4000
+#define INTERVAL                  4000
 
-#define LOCATION_COUNT     16
+#define LOCATION_COUNT              16
 
-#define TLC5947_COUNT       2
-#define TLC5947_CLK_PIN     D3
-#define TLC5947_DAT_PIN     D2
-#define TLC5947_LAT_PIN     D4
+#define TLC5947_COUNT                2
+#define TLC5947_CLK_PIN             D3
+#define TLC5947_DAT_PIN             D2
+#define TLC5947_LAT_PIN             D4
 
-#define SERIAL_BAUD_RATE 9600
+#define MODE_BUTTON_PIN             D5
+#define MODE_BUTTON_DEBOUNCE_TIME  300
+
+#define SERIAL_BAUD_RATE          9600
 
 Adafruit_TLC5947 adafruit_ltc5947(TLC5947_COUNT, TLC5947_CLK_PIN, TLC5947_DAT_PIN, TLC5947_LAT_PIN);
 
-Tick tick(INTERVAL);
+::gos::atl::Tick<> tick(INTERVAL);
 
 const char* urlpath;
 String payload;
 
-unsigned long current;
-int i, c, location;
+unsigned long current, mode_button_debounce_timer;
+int i, location, progress;
 int result;
 
-WeatherItem mode;
+int mode;
 
 Information information[LOCATION_COUNT];
 
 gos_rgb_gradient gradient_1;
 gos_rgb_gradient gradient_2;
 
-static void setLed(uint16_t lednum, gos_rgb* rgb) {
-  adafruit_ltc5947.setLED(lednum, rgb->r, rgb->g, rgb->b);
+static void update_all_leds() {
+  for (i = 0; i <= progress; i++) {
+    tx_set_led(i, &(information[i]), mode);
+  }
+  tx_led_write();
 }
 
 void setup() {
+  pinMode(MODE_BUTTON_PIN, INPUT_PULLUP);
+ 
+  current = 0;
   location = 0;
-  mode = TEMPERATURE;
+  progress = -1;
+  mode = MODE_FIRST;
+  mode_button_debounce_timer = 0;
+  
   tx_create_gradient_1(&gradient_1);
   tx_create_gradient_2(&gradient_2);
   create_ranges(gradient_1.count - 1, gradient_2.count - 1);
-  adafruit_ltc5947.begin();
-  adafruit_ltc5947.write();
+  tx_led_init(&adafruit_ltc5947, &gradient_1, &gradient_2);
+  
   for (i = 0; i < LOCATION_COUNT; i++) {
     information[i].temperature = 0.0;
     information[i].pressure = 0;
@@ -64,9 +81,12 @@ void setup() {
     information[i].rain_1h = 0.0;
     information[i].rain_3h = 0.0;
   }
+  tx_oled_init();
+
 #ifdef SERIAL_BAUD_RATE
   Serial.begin(SERIAL_BAUD_RATE);
 #endif
+  tx_oled_show_status(STATUS_CONN_WIFI);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while(WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -80,21 +100,29 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 #endif
-  for (i = 0; i < gradient_1.count; i++) {
-    setLed(0, gradient_1.gradient + i);
-    adafruit_ltc5947.write();
-    delay(20);
-  }
-  for (i = 0; i < gradient_2.count; i++) {
-    setLed(8, gradient_2.gradient + i);
-    adafruit_ltc5947.write();
-    delay(20);
-  }
+  tx_oled_show_status(STATUS_CONNECTED);
+  tx_led_test();
+  tx_oled_show_mode(mode);
 }
 
 void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     current = millis();
+
+    if (digitalRead(MODE_BUTTON_PIN) == LOW && current > mode_button_debounce_timer) {
+      if (mode < MODE_LAST) {
+        mode++;
+      } else {
+        mode = MODE_FIRST;
+      }
+      tx_oled_show_mode(mode);
+      update_all_leds();
+#ifdef SERIAL_BAUD_RATE
+      Serial.print("New Mode: ");
+      Serial.println(mode);
+#endif
+      mode_button_debounce_timer = current + MODE_BUTTON_DEBOUNCE_TIME;
+    }
 
     if (tick.is(current)) {
       // TODO fetch open weather map information
@@ -113,12 +141,14 @@ void loop() {
             payload = http.getString();
             parse_weather_result(&(information[location]), payload);
 
-            c = gos_scale_value_with_guard(&scale_temperature, information[location].temperature);
-            // c = gos_scale_value_with_guard(&scale_pressure, information[location].rain_1h);
-            setLed(location, gradient_1.gradient + c);
-            adafruit_ltc5947.write();
+            tx_set_led(location, &(information[location]), mode);
+            tx_led_write();
           }
         }
+      }
+
+      if (location > progress) {
+        progress = location;
       }
 
       location++;

@@ -31,17 +31,6 @@ typedef struct gos_rgb_gradient {
   int count;
 } gos_rgb_gradient;
 
-typedef enum {
-  TEMPERATURE,
-  PRESSURE,
-  HUMIDITY,
-  WIND_SPEED,
-  VISIBILITY,
-  CLOUDS,
-  RAIN_1H,
-  RAIN_3H
-} WeatherItem;
-
 typedef struct Information {
   double temperature;
   int    pressure;
