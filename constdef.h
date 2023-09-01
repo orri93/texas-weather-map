@@ -1,6 +1,8 @@
 #ifndef _TEXAS_CONST_DEF_H_
 #define _TEXAS_CONST_DEF_H_
 
+#define LOCATION_COUNT  16
+
 #define MODE_FIRST       0
 #define MODE_TEMPERATURE 0
 #define MODE_PRESSURE    1
@@ -15,5 +17,6 @@
 #define STATUS_INIT      0
 #define STATUS_CONN_WIFI 1
 #define STATUS_CONNECTED 2
+#define STATUS_TESTING   3
 
 #endif /* _TEXAS_CONST_DEF_H_ */

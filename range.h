@@ -12,6 +12,6 @@ extern gos_scale scale_clouds;
 extern gos_scale scale_rain_1h;
 extern gos_scale scale_rain_3h;
 
-void create_ranges(double scale1, double scale2);
+void create_ranges(double scale1, double scale2, double scale3, double scale4);
 
 #endif

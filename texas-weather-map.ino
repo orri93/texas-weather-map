@@ -20,8 +20,6 @@
 
 #define INTERVAL                  4000
 
-#define LOCATION_COUNT              16
-
 #define TLC5947_COUNT                2
 #define TLC5947_CLK_PIN             D3
 #define TLC5947_DAT_PIN             D2
@@ -47,8 +45,10 @@ int mode;
 
 Information information[LOCATION_COUNT];
 
-gos_rgb_gradient gradient_1;
-gos_rgb_gradient gradient_2;
+gos_rgb_gradient gradient_1;  // General
+gos_rgb_gradient gradient_2;  // For rain
+gos_rgb_gradient gradient_3;  // For clouds
+gos_rgb_gradient gradient_4;  // For visibility
 
 static void update_all_leds() {
   for (i = 0; i <= progress; i++) {
@@ -68,8 +68,10 @@ void setup() {
   
   tx_create_gradient_1(&gradient_1);
   tx_create_gradient_2(&gradient_2);
-  create_ranges(gradient_1.count - 1, gradient_2.count - 1);
-  tx_led_init(&adafruit_ltc5947, &gradient_1, &gradient_2);
+  tx_create_gradient_3(&gradient_3);
+  tx_create_gradient_4(&gradient_4);
+  create_ranges(gradient_1.count - 1, gradient_2.count - 1, gradient_3.count - 1, gradient_4.count - 1);
+  tx_led_init(&adafruit_ltc5947, &gradient_1, &gradient_2, &gradient_3, &gradient_4);
   
   for (i = 0; i < LOCATION_COUNT; i++) {
     information[i].temperature = 0.0;
@@ -82,6 +84,8 @@ void setup() {
     information[i].rain_3h = 0.0;
   }
   tx_oled_init();
+  tx_oled_show_status(STATUS_TESTING);
+  tx_led_test();
 
 #ifdef SERIAL_BAUD_RATE
   Serial.begin(SERIAL_BAUD_RATE);
@@ -100,8 +104,7 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 #endif
-  tx_oled_show_status(STATUS_CONNECTED);
-  tx_led_test();
+  // tx_oled_show_status(STATUS_CONNECTED);
   tx_oled_show_mode(mode);
 }
 
@@ -116,6 +119,9 @@ void loop() {
         mode = MODE_FIRST;
       }
       tx_oled_show_mode(mode);
+      if (progress >= 0) {
+        tx_oled_show_information(&(information[0]), mode);
+      }
       update_all_leds();
 #ifdef SERIAL_BAUD_RATE
       Serial.print("New Mode: ");
@@ -149,6 +155,11 @@ void loop() {
 
       if (location > progress) {
         progress = location;
+      }
+
+      // Houston information
+      if (location == 0) {
+        tx_oled_show_information(&(information[0]), mode);
       }
 
       location++;

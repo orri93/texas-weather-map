@@ -33,44 +33,54 @@ gos_scale scale_clouds;
 gos_scale scale_rain_1h;
 gos_scale scale_rain_3h;
 
-void create_ranges(double scale1, double scale2) {
-  // Temperature
+// Scale 1 general
+// Scale 2 for rain
+// Scale 3 for clouds
+// Scale 4 for visibility
+void create_ranges(double scale1, double scale2, double scale3, double scale4) {
+  // Temperature uses scale 1
   scale_temperature.domain.from = MINIMUM_TEMPERATURE;
   scale_temperature.domain.to = MAXIMUM_TEMPERATURE;
   scale_temperature.range.from = 0.0;
   scale_temperature.range.to = scale1;
 
-  // Pressure
+  // Pressure uses scale 1
   scale_pressure.domain.from = MINIMUM_PRESSURE;
   scale_pressure.domain.to = MAXIMUM_PRESSURE;
   scale_pressure.range.from = 0.0;
   scale_pressure.range.to = scale1;
 
+  // Humidity uses scale 1
   scale_humidity.domain.from = MINIMUM_HUMIDITY;
   scale_humidity.domain.to = MAXIMUM_HUMIDITY;
   scale_humidity.range.from = 0.0;
   scale_humidity.range.to = scale1;
 
+  // Wind speed uses scale 1
   scale_wind_speed.domain.from = MINIMUM_WIND_SPEED;
   scale_wind_speed.domain.to = MAXIMUM_WIND_SPEED;
   scale_wind_speed.range.from = 0.0;
   scale_wind_speed.range.to = scale1;
 
+  // Visibility uses scale 4
   scale_visibility.domain.from = MINIMUM_VISIBILITY;
   scale_visibility.domain.to = MAXIMUM_VISIBILITY;
   scale_visibility.range.from = 0.0;
-  scale_visibility.range.to = scale1;
+  scale_visibility.range.to = scale4;
 
+  // Clouds uses scale 3
   scale_clouds.domain.from = MINIMUM_CLOUDS;
   scale_clouds.domain.to = MAXIMUM_CLOUDS;
   scale_clouds.range.from = 0.0;
-  scale_clouds.range.to = scale1;
+  scale_clouds.range.to = scale3;
 
+  // Rain 1 hour uses scale 2
   scale_rain_1h.domain.from = MINIMUM_RAIN_1H;
   scale_rain_1h.domain.to = MAXIMUM_RAIN_1H;
   scale_rain_1h.range.from = 0.0;
   scale_rain_1h.range.to = scale2;
 
+  // Rain 3 hours uses scale 2
   scale_rain_3h.domain.from = MINIMUM_RAIN_3H;
   scale_rain_3h.domain.to = MAXIMUM_RAIN_3H;
   scale_rain_3h.range.from = 0.0;

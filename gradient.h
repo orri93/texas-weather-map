@@ -5,5 +5,7 @@
 
 bool tx_create_gradient_1(gos_rgb_gradient* gradient);
 bool tx_create_gradient_2(gos_rgb_gradient* gradient);
+bool tx_create_gradient_3(gos_rgb_gradient* gradient);
+bool tx_create_gradient_4(gos_rgb_gradient* gradient);
 
 #endif
