@@ -1,18 +1,11 @@
 #include "gradient.h"
 #include "color.h"
 
+#define TX_COLOR_SIZE   64
+
+// General gradient
 #define TX_COLOR_STOP_COUNT_1 6
-#define TX_COLOR_SIZE_1 64
-
-#define TX_COLOR_STOP_COUNT_2 3
-#define TX_COLOR_SIZE_2 64
-
-#define TX_COLOR_STOP_COUNT_3 2
-#define TX_COLOR_SIZE_3 64
-
-#define TX_COLOR_STOP_COUNT_4 2
-#define TX_COLOR_SIZE_4 64
-
+#define TX_COLOR_SIZE_1 TX_COLOR_SIZE
 bool tx_create_gradient_1(gos_rgb_gradient* gradient) {
   int i;
   int* gsizeat;
@@ -41,6 +34,9 @@ bool tx_create_gradient_1(gos_rgb_gradient* gradient) {
     GOS_COLOR_GAMMA);
 }
 
+// Gradient for rain
+#define TX_COLOR_STOP_COUNT_2 3
+#define TX_COLOR_SIZE_2 TX_COLOR_SIZE
 bool tx_create_gradient_2(gos_rgb_gradient* gradient) {
   int i;
   int* gsizeat;
@@ -66,6 +62,9 @@ bool tx_create_gradient_2(gos_rgb_gradient* gradient) {
     GOS_COLOR_GAMMA);
 }
 
+// Gradient for clouds
+#define TX_COLOR_STOP_COUNT_3 3
+#define TX_COLOR_SIZE_3 TX_COLOR_SIZE
 bool tx_create_gradient_3(gos_rgb_gradient* gradient) {
   int i;
   int* gsizeat;
@@ -73,6 +72,7 @@ bool tx_create_gradient_3(gos_rgb_gradient* gradient) {
   gos_rgb stops[TX_COLOR_STOP_COUNT_3];
   gos_rgb* rgbat = stops;
 
+  gos_color_assign_rgb32(rgbat++, 0xf4ec04);  /* Yellow */
   gos_color_assign_rgb32(rgbat++, 0x02f7f3);  /* Cyan */
   gos_color_assign_rgb32(rgbat++, 0xffffff);  /* White */
 
@@ -90,6 +90,9 @@ bool tx_create_gradient_3(gos_rgb_gradient* gradient) {
     GOS_COLOR_GAMMA);
 }
 
+// Gradient for visibility
+#define TX_COLOR_STOP_COUNT_4 3
+#define TX_COLOR_SIZE_4 TX_COLOR_SIZE
 bool tx_create_gradient_4(gos_rgb_gradient* gradient) {
   int i;
   int* gsizeat;
@@ -99,6 +102,7 @@ bool tx_create_gradient_4(gos_rgb_gradient* gradient) {
 
   gos_color_assign_rgb32(rgbat++, 0x101010);  /* Dark Gray */
   gos_color_assign_rgb32(rgbat++, 0x02f7f3);  /* Cyan */
+  gos_color_assign_rgb32(rgbat++, 0xf4ec04);  /* Yellow */
 
   /* Equal sized gradient */
   gsizeat = gradientsize;
