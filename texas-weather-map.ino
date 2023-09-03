@@ -41,7 +41,7 @@ const char* urlpath;
 String payload;
 
 unsigned long current, mode_button_debounce_timer;
-int i, location, progress, ordinal_day, season;
+int i, location, progress, ordinal_day, season, last_season;
 int result;
 
 int mode;
@@ -66,7 +66,7 @@ void setup() {
   current = 0;
   location = 0;
   progress = -1;
-  season = SEASON_UNKNOWN;
+  last_season = season = SEASON_UNKNOWN; 
   mode = MODE_FIRST;
   mode_button_debounce_timer = 0;
   
@@ -144,7 +144,13 @@ void loop() {
           payload = http.getString();
           ordinal_day = parse_world_clock_result(payload);
           season = tx_season_from_ordinal_day(ordinal_day);
-          tx_oled_show_mode(mode, season);
+          if (last_season != season) {
+            tx_oled_show_mode(mode, season);
+            if (mode == MODE_TEMPERATURE) {
+              update_all_leds();
+            }
+            last_season = season;
+          }
 #ifdef SERIAL_BAUD_RATE
           Serial.print("The Ordinal Day is ");
           Serial.println(ordinal_day);
