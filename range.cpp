@@ -1,30 +1,42 @@
 #include "range.h"
 
-#define MINIMUM_TEMPERATURE  263.0  /* °K  = -10°C  =  14°F */
-#define MAXIMUM_TEMPERATURE  318.0  /* °K  =  45°C  = 113°F */
+#define MINIMUM_TEMPERATURE             263.0  /* °K  = -10°C  =  14°F */
+#define MAXIMUM_TEMPERATURE             318.0  /* °K  =  45°C  = 113°F */
 
-#define MINIMUM_PRESSURE    1065.0  /* hPa */
-#define MAXIMUM_PRESSURE    1084.0  /* hPa */
+#define MINIMUM_TEMPERATURE_WINTER      263.0  /* °K  = -10°C  =  14°F */
+#define MAXIMUM_TEMPERATURE_WINTER      303.0  /* °K  =  30°C  =  86°F */
 
-#define MINIMUM_HUMIDITY       0.0  /* % */
-#define MAXIMUM_HUMIDITY     100.0  /* % */
+#define MINIMUM_TEMPERATURE_SUMMER      293.0  /* °K  =  20°C  =  68°F */
+#define MAXIMUM_TEMPERATURE_SUMMER      318.0  /* °K  =  45°C  = 113°F */
 
-#define MINIMUM_WIND_SPEED     0.0  /* m/s */
-#define MAXIMUM_WIND_SPEED   100.0  /* m/s */
+#define MINIMUM_TEMPERATURE_EQUINOXIAL  283.0  /* °K  =  10°C  =  50°F */
+#define MAXIMUM_TEMPERATURE_EQUINOXIAL  308.0  /* °K  =  35°C  =  95°F */
 
-#define MINIMUM_VISIBILITY     0.0
-#define MAXIMUM_VISIBILITY 10000.0
+#define MINIMUM_PRESSURE               1065.0  /* hPa */
+#define MAXIMUM_PRESSURE               1084.0  /* hPa */
 
-#define MINIMUM_CLOUDS         0.0  /* % */
-#define MAXIMUM_CLOUDS       100.0  /* % */
+#define MINIMUM_HUMIDITY                  0.0  /* % */
+#define MAXIMUM_HUMIDITY                100.0  /* % */
 
-#define MINIMUM_RAIN_1H        0.0  /* mm */
-#define MAXIMUM_RAIN_1H      300.0  /* mm */
+#define MINIMUM_WIND_SPEED                0.0  /* m/s */
+#define MAXIMUM_WIND_SPEED              100.0  /* m/s */
 
-#define MINIMUM_RAIN_3H        0.0  /* mm */
-#define MAXIMUM_RAIN_3H      600.0  /* mm */
+#define MINIMUM_VISIBILITY                0.0
+#define MAXIMUM_VISIBILITY            10000.0
+
+#define MINIMUM_CLOUDS                    0.0  /* % */
+#define MAXIMUM_CLOUDS                  100.0  /* % */
+
+#define MINIMUM_RAIN_1H                   0.0  /* mm */
+#define MAXIMUM_RAIN_1H                 300.0  /* mm */
+
+#define MINIMUM_RAIN_3H                   0.0  /* mm */
+#define MAXIMUM_RAIN_3H                 600.0  /* mm */
 
 gos_scale scale_temperature;
+gos_scale scale_temperature_winter;
+gos_scale scale_temperature_summer;
+gos_scale scale_temperature_equinoxial;
 gos_scale scale_pressure;
 gos_scale scale_humidity;
 gos_scale scale_wind_speed;
@@ -43,6 +55,18 @@ void create_ranges(double scale1, double scale2, double scale3, double scale4) {
   scale_temperature.domain.to = MAXIMUM_TEMPERATURE;
   scale_temperature.range.from = 0.0;
   scale_temperature.range.to = scale1;
+  scale_temperature_winter.domain.from = MINIMUM_TEMPERATURE_WINTER;
+  scale_temperature_winter.domain.to = MAXIMUM_TEMPERATURE_WINTER;
+  scale_temperature_winter.range.from = 0.0;
+  scale_temperature_winter.range.to = scale1;
+  scale_temperature_summer.domain.from = MINIMUM_TEMPERATURE_SUMMER;
+  scale_temperature_summer.domain.to = MAXIMUM_TEMPERATURE_SUMMER;
+  scale_temperature_summer.range.from = 0.0;
+  scale_temperature_summer.range.to = scale1;
+  scale_temperature_equinoxial.domain.from = MINIMUM_TEMPERATURE_EQUINOXIAL;
+  scale_temperature_equinoxial.domain.to = MAXIMUM_TEMPERATURE_EQUINOXIAL;
+  scale_temperature_equinoxial.range.from = 0.0;
+  scale_temperature_equinoxial.range.to = scale1;
 
   // Pressure uses scale 1
   scale_pressure.domain.from = MINIMUM_PRESSURE;

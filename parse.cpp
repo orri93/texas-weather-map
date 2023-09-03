@@ -1,6 +1,8 @@
 #include <Arduino_JSON.h>
 #include "parse.h"
 
+#define ORDINAL_DATE "ordinalDate"
+
 static double parse_double(JSONVar object, const char* key) {
   if (object.hasOwnProperty(key)) {
     return (double)object[key];
@@ -18,7 +20,6 @@ static int parse_int(JSONVar object, const char* key) {
 }
 
 void parse_weather_result(Information* information, const String& payload) {
-  String s;
   JSONVar weatherObject = JSON.parse(payload);
   JSONVar mainObject = weatherObject["main"];
   information->temperature = parse_double(mainObject, "temp");
@@ -32,4 +33,15 @@ void parse_weather_result(Information* information, const String& payload) {
   JSONVar rainObject = weatherObject["rain"];
   information->rain_1h = parse_double(rainObject, "1h");
   information->rain_3h = parse_double(rainObject, "3h");
+}
+
+int parse_world_clock_result(const String& payload) {
+  JSONVar worldClockObject = JSON.parse(payload);
+  if (worldClockObject.hasOwnProperty(ORDINAL_DATE)) {
+    String ordinal_date_string = worldClockObject[ORDINAL_DATE];
+    String ordinal_day_string = ordinal_date_string.substring(5);
+    return ordinal_day_string.toInt();
+  } else {
+    return 0;
+  }
 }

@@ -14,7 +14,7 @@ void tx_led_init(
 
 void tx_led_test();
 
-void tx_set_led(int led_no, Information* information, int mode);
+void tx_set_led(int led_no, Information* information, int mode, int season);
 void tx_led_write();
 
 #endif /* _TEXAS_LED_H_ */

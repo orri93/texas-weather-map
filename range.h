@@ -4,6 +4,9 @@
 #include "types.h"
 
 extern gos_scale scale_temperature;
+extern gos_scale scale_temperature_winter;
+extern gos_scale scale_temperature_summer;
+extern gos_scale scale_temperature_equinoxial;
 extern gos_scale scale_pressure;
 extern gos_scale scale_humidity;
 extern gos_scale scale_wind_speed;

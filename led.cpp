@@ -108,11 +108,24 @@ void tx_led_test() {
   tlc5947->write();
 }
 
-void tx_set_led(int led_no, Information* information, int mode) {
+void tx_set_led(int led_no, Information* information, int mode, int season) {
+  gos_scale* temperature_scale = &scale_temperature;
   switch(mode) {
   case MODE_TEMPERATURE:
     // Temperature uses general gradient 1
-    c = gos_scale_value_with_guard(&scale_temperature, information->temperature);
+    switch(season) {
+    case SEASON_WINTER:
+      temperature_scale = &scale_temperature_winter;
+      break;
+    case SEASON_SUMMER:
+      temperature_scale = &scale_temperature_summer;
+      break;
+    case SEASON_SPRING:
+    case SEASON_AUTMN:
+      temperature_scale = &scale_temperature_equinoxial;
+      break;
+    }
+    c = gos_scale_value_with_guard(temperature_scale, information->temperature);
     tx_set_a_led(led_no, g1->gradient + c);
     break;
   case MODE_PRESSURE:

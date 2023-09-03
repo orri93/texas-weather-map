@@ -4,29 +4,29 @@
 
 #include <U8x8lib.h>
 
-#define OLED_X               2
-#define OLDE_Y_FIRST_LINE    0
-#define OLDE_Y_SECOND_LINE   2
+#define OLED_X                   0
+#define OLDE_Y_FIRST_LINE        0
+#define OLDE_Y_SECOND_LINE       2
 
-#define MAIN_BUFFER_SIZE    64
-#define NUMBER_BUFFER_SIZE  64
+#define BUFFER_SIZE_MAIN        64
+#define BUFFER_SIZE_NUMBER      64
 
-#define NUMBER_WIDTH         8
+#define NUMBER_WIDTH             8
 
 static U8X8_SSD1306_128X32_UNIVISION_HW_I2C u8x8;
 
-static char buffer_main[MAIN_BUFFER_SIZE];
-static char buffer_number[NUMBER_BUFFER_SIZE];
+static char buffer_main[BUFFER_SIZE_MAIN];
+static char buffer_number[BUFFER_SIZE_NUMBER];
 
 static void tx_format_double(double value, unsigned int prec, const char* unit) {
-  memset(buffer_main, 0, MAIN_BUFFER_SIZE);
-  memset(buffer_number, 0, NUMBER_BUFFER_SIZE);
+  memset(buffer_main, 0, BUFFER_SIZE_MAIN);
+  memset(buffer_number, 0, BUFFER_SIZE_NUMBER);
   dtostrf(value, NUMBER_WIDTH, prec, buffer_number);
   sprintf(buffer_main, "%s %s", buffer_number, unit);
 }
 
 static void tx_format_int(int value, const char* unit) {
-  memset(buffer_main, 0, MAIN_BUFFER_SIZE);
+  memset(buffer_main, 0, BUFFER_SIZE_MAIN);
   sprintf(buffer_main, "%d %s", value, unit);
 }
 
@@ -52,12 +52,28 @@ void tx_oled_show_status(int status) {
   }
 }
 
-void tx_oled_show_mode(int mode) {
+void tx_oled_show_mode(int mode, int season) {
   u8x8.setFont(u8x8_font_8x13B_1x2_r);
   u8x8.clearDisplay();
   switch(mode) {
   case MODE_TEMPERATURE:
-    u8x8.drawString(OLED_X, OLDE_Y_FIRST_LINE, "Temperature");
+    switch(season) {
+    case SEASON_UNKNOWN:
+      u8x8.drawString(OLED_X, OLDE_Y_FIRST_LINE, "Temperature");
+      break;
+    case SEASON_WINTER:
+      u8x8.drawString(OLED_X, OLDE_Y_FIRST_LINE, "Temperature Win.");
+      break;
+    case SEASON_SPRING:
+      u8x8.drawString(OLED_X, OLDE_Y_FIRST_LINE, "Temperature Spr.");
+      break;
+    case SEASON_SUMMER:
+      u8x8.drawString(OLED_X, OLDE_Y_FIRST_LINE, "Temperature Sum.");
+      break;
+    case SEASON_AUTMN:
+      u8x8.drawString(OLED_X, OLDE_Y_FIRST_LINE, "Temperature Aut.");
+      break;
+    }
     break;
   case MODE_PRESSURE:
     u8x8.drawString(OLED_X, OLDE_Y_FIRST_LINE, "Pressure");
