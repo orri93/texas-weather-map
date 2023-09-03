@@ -138,6 +138,7 @@ void loop() {
     if (tick_check_day.is(current)) {
       HTTPClient http;
       http.begin(QUERY_WORLD_CLOCK_API);
+      http.setTimeout(60000);
       result = http.GET();
       if (result > 0) {
         if (result == HTTP_CODE_OK) {
@@ -146,6 +147,7 @@ void loop() {
           season = tx_season_from_ordinal_day(ordinal_day);
           if (last_season != season) {
             tx_oled_show_mode(mode, season);
+            tx_oled_show_information(&(information[0]), mode);
             if (mode == MODE_TEMPERATURE) {
               update_all_leds();
             }
@@ -172,7 +174,17 @@ void loop() {
             break;
           }
 #endif
+        } else {
+#ifdef SERIAL_BAUD_RATE
+          Serial.print("World Clock Query was unsuccessful with result code ");
+          Serial.println(result);
+#endif
         }
+      } else {
+#ifdef SERIAL_BAUD_RATE
+        Serial.print("World Clock Query failed with result code ");
+        Serial.println(result);
+#endif
       }
     }
     yield();

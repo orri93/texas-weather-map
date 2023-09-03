@@ -4,9 +4,9 @@
 #define MAXIMUM_TEMPERATURE             318.0  /* °K  =  45°C  = 113°F */
 
 #define MINIMUM_TEMPERATURE_WINTER      263.0  /* °K  = -10°C  =  14°F */
-#define MAXIMUM_TEMPERATURE_WINTER      293.0  /* °K  =  20°C  =  68°F */
+#define MAXIMUM_TEMPERATURE_WINTER      303.0  /* °K  =  30°C  =  86°F */
 
-#define MINIMUM_TEMPERATURE_SUMMER      303.0  /* °K  =  30°C  =  86°F */
+#define MINIMUM_TEMPERATURE_SUMMER      293.0  /* °K  =  20°C  =  68°F */
 #define MAXIMUM_TEMPERATURE_SUMMER      318.0  /* °K  =  45°C  = 113°F */
 
 #define MINIMUM_TEMPERATURE_EQUINOXIAL  283.0  /* °K  =  10°C  =  50°F */
