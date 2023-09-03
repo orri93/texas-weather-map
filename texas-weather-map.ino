@@ -13,12 +13,14 @@
 #include "gradient.h"
 #include "queries.h"
 #include "secrets.h"
+#include "season.h"
 #include "range.h"
 #include "parse.h"
 #include "oled.h"
 #include "led.h"
 
 #define INTERVAL                  4000
+#define INTERVAL_CHECK_DAY   604800000
 
 #define TLC5947_COUNT                2
 #define TLC5947_CLK_PIN             D3
@@ -33,12 +35,13 @@
 Adafruit_TLC5947 adafruit_ltc5947(TLC5947_COUNT, TLC5947_CLK_PIN, TLC5947_DAT_PIN, TLC5947_LAT_PIN);
 
 ::gos::atl::Tick<> tick(INTERVAL);
+::gos::atl::Tick<> tick_check_day(INTERVAL_CHECK_DAY);
 
 const char* urlpath;
 String payload;
 
 unsigned long current, mode_button_debounce_timer;
-int i, location, progress;
+int i, location, progress, ordinal_day, season;
 int result;
 
 int mode;
@@ -52,7 +55,7 @@ gos_rgb_gradient gradient_4;  // For visibility
 
 static void update_all_leds() {
   for (i = 0; i <= progress; i++) {
-    tx_set_led(i, &(information[i]), mode);
+    tx_set_led(i, &(information[i]), mode, season);
   }
   tx_led_write();
 }
@@ -63,6 +66,7 @@ void setup() {
   current = 0;
   location = 0;
   progress = -1;
+  season = SEASON_UNKNOWN;
   mode = MODE_FIRST;
   mode_button_debounce_timer = 0;
   
@@ -129,6 +133,42 @@ void loop() {
 #endif
       mode_button_debounce_timer = current + MODE_BUTTON_DEBOUNCE_TIME;
     }
+    yield();
+
+    if (tick_check_day.is(current)) {
+      HTTPClient http;
+      http.begin(QUERY_WORLD_CLOCK_API);
+      result = http.GET();
+      if (result > 0) {
+        if (result == HTTP_CODE_OK) {
+          payload = http.getString();
+          ordinal_day = parse_world_clock_result(payload);
+          season = tx_season_from_ordinal_day(ordinal_day);
+#ifdef SERIAL_BAUD_RATE
+          Serial.print("The Ordinal Day is ");
+          Serial.println(ordinal_day);
+          switch(season) {
+          case SEASON_UNKNOWN:
+            Serial.println("The Season is unknown");
+            break;
+          case SEASON_WINTER:
+            Serial.println("The Season is winter");
+            break;
+          case SEASON_SPRING:
+            Serial.println("The Season is spring");
+            break;
+          case SEASON_SUMMER:
+            Serial.println("The Season is summer");
+            break;
+          case SEASON_AUTMN:
+            Serial.println("The Season is autmn");
+            break;
+          }
+#endif
+        }
+      }
+    }
+    yield();
 
     if (tick.is(current)) {
       // TODO fetch open weather map information
@@ -141,13 +181,12 @@ void loop() {
 #endif
         http.begin(urlpath);
         result = http.GET();
-
         if (result > 0) {
           if (result == HTTP_CODE_OK) {
             payload = http.getString();
             parse_weather_result(&(information[location]), payload);
 
-            tx_set_led(location, &(information[location]), mode);
+            tx_set_led(location, &(information[location]), mode, season);
             tx_led_write();
           }
         }

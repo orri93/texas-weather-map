@@ -19,4 +19,10 @@
 #define STATUS_CONNECTED 2
 #define STATUS_TESTING   3
 
+#define SEASON_UNKNOWN   0
+#define SEASON_WINTER    1
+#define SEASON_SPRING    2
+#define SEASON_SUMMER    3
+#define SEASON_AUTMN     4
+
 #endif /* _TEXAS_CONST_DEF_H_ */
