@@ -1,10 +1,17 @@
 #include "season.h"
 #include "constdef.h"
 
-#define SEASON_END_OF_WINTER  46
-#define SEASON_END_OF_SPRING 138
-#define SEASON_END_OF_SUMMER 230
-#define SEASON_END_OF_AUTMN  321
+// Equal divide the year into 4
+//#define SEASON_END_OF_WINTER  46
+//#define SEASON_END_OF_SPRING 138
+//#define SEASON_END_OF_SUMMER 230
+//#define SEASON_END_OF_AUTMN  321
+
+#define SEASON_END_OF_WINTER  32  /* Winter ends in the end of january   */
+#define SEASON_END_OF_SPRING 122  /* Spring ends in the end of April     */
+#define SEASON_END_OF_SUMMER 275  /* Summer ends in the end of September */
+#define SEASON_END_OF_AUTMN  335  /* Autmn  ends in the end of November  */ 
+
 
 #define SEASON_END_OF_YEAR   366
 
