@@ -109,7 +109,7 @@ void setup() {
   Serial.println(WiFi.localIP());
 #endif
   // tx_oled_show_status(STATUS_CONNECTED);
-  tx_oled_show_mode(mode);
+  tx_oled_show_mode(mode, season);
 }
 
 void loop() {
@@ -122,7 +122,7 @@ void loop() {
       } else {
         mode = MODE_FIRST;
       }
-      tx_oled_show_mode(mode);
+      tx_oled_show_mode(mode, season);
       if (progress >= 0) {
         tx_oled_show_information(&(information[0]), mode);
       }
@@ -144,6 +144,7 @@ void loop() {
           payload = http.getString();
           ordinal_day = parse_world_clock_result(payload);
           season = tx_season_from_ordinal_day(ordinal_day);
+          tx_oled_show_mode(mode, season);
 #ifdef SERIAL_BAUD_RATE
           Serial.print("The Ordinal Day is ");
           Serial.println(ordinal_day);
