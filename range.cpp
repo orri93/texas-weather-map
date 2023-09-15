@@ -12,8 +12,8 @@
 #define MINIMUM_TEMPERATURE_EQUINOXIAL  283.0  /* °K  =  10°C  =  50°F */
 #define MAXIMUM_TEMPERATURE_EQUINOXIAL  308.0  /* °K  =  35°C  =  95°F */
 
-#define MINIMUM_PRESSURE               1065.0  /* hPa */
-#define MAXIMUM_PRESSURE               1084.0  /* hPa */
+#define MINIMUM_PRESSURE               1000.0  /* hPa */
+#define MAXIMUM_PRESSURE               1030.0  /* hPa */
 
 #define MINIMUM_HUMIDITY                  0.0  /* % */
 #define MAXIMUM_HUMIDITY                100.0  /* % */
