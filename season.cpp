@@ -15,18 +15,18 @@
 
 #define SEASON_END_OF_YEAR   366
 
-int tx_season_from_ordinal_day(int ordinal_day) {
-  if (ordinal_day <= 0) {
+int tx_season_from_day_of_year(int day_of_year) {
+  if (day_of_year <= 0) {
     return SEASON_UNKNOWN;
-  } else if (ordinal_day <= SEASON_END_OF_WINTER) {
+  } else if (day_of_year <= SEASON_END_OF_WINTER) {
     return SEASON_WINTER;
-  } else if (ordinal_day <= SEASON_END_OF_SPRING) {
+  } else if (day_of_year <= SEASON_END_OF_SPRING) {
     return SEASON_SPRING;
-  } else if (ordinal_day <= SEASON_END_OF_SUMMER) {
+  } else if (day_of_year <= SEASON_END_OF_SUMMER) {
     return SEASON_SUMMER;
-  } else if (ordinal_day <= SEASON_END_OF_AUTMN) {
+  } else if (day_of_year <= SEASON_END_OF_AUTMN) {
     return SEASON_AUTMN;
-  } else if (ordinal_day <= SEASON_END_OF_YEAR) {
+  } else if (day_of_year <= SEASON_END_OF_YEAR) {
     return SEASON_WINTER;
   } else {
     return SEASON_UNKNOWN;

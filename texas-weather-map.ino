@@ -41,7 +41,7 @@ const char* urlpath;
 String payload;
 
 unsigned long current, mode_button_debounce_timer;
-int i, location, progress, ordinal_day, season, last_season;
+int i, location, progress, day_of_year, season, last_season;
 int result;
 
 int mode;
@@ -137,14 +137,14 @@ void loop() {
 
     if (tick_check_day.is(current)) {
       HTTPClient http;
-      http.begin(QUERY_WORLD_CLOCK_API);
+      http.begin(QUERY_WORLD_TIME_API);
       http.setTimeout(60000);
       result = http.GET();
       if (result > 0) {
         if (result == HTTP_CODE_OK) {
           payload = http.getString();
-          ordinal_day = parse_world_clock_result(payload);
-          season = tx_season_from_ordinal_day(ordinal_day);
+          day_of_year = parse_world_time_result(payload);
+          season = tx_season_from_day_of_year(day_of_year);
           if (last_season != season) {
             tx_oled_show_mode(mode, season);
             tx_oled_show_information(&(information[0]), mode);
@@ -154,8 +154,8 @@ void loop() {
             last_season = season;
           }
 #ifdef SERIAL_BAUD_RATE
-          Serial.print("The Ordinal Day is ");
-          Serial.println(ordinal_day);
+          Serial.print("The day of the year is ");
+          Serial.println(day_of_year);
           switch(season) {
           case SEASON_UNKNOWN:
             Serial.println("The Season is unknown");
@@ -176,13 +176,13 @@ void loop() {
 #endif
         } else {
 #ifdef SERIAL_BAUD_RATE
-          Serial.print("World Clock Query was unsuccessful with result code ");
+          Serial.print("World Time Query was unsuccessful with result code ");
           Serial.println(result);
 #endif
         }
       } else {
 #ifdef SERIAL_BAUD_RATE
-        Serial.print("World Clock Query failed with result code ");
+        Serial.print("World Time Query failed with result code ");
         Serial.println(result);
 #endif
       }

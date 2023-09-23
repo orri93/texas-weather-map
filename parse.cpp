@@ -2,6 +2,7 @@
 #include "parse.h"
 
 #define ORDINAL_DATE "ordinalDate"
+#define DAY_OF_YEAR  "day_of_year"
 
 static double parse_double(JSONVar object, const char* key) {
   if (object.hasOwnProperty(key)) {
@@ -41,6 +42,15 @@ int parse_world_clock_result(const String& payload) {
     String ordinal_date_string = worldClockObject[ORDINAL_DATE];
     String ordinal_day_string = ordinal_date_string.substring(5);
     return ordinal_day_string.toInt();
+  } else {
+    return 0;
+  }
+}
+
+int parse_world_time_result(const String& payload) {
+  JSONVar worldTimeObject = JSON.parse(payload);
+  if (worldTimeObject.hasOwnProperty(DAY_OF_YEAR)) {
+    return (int)worldTimeObject[DAY_OF_YEAR];
   } else {
     return 0;
   }

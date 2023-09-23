@@ -11,4 +11,7 @@ void parse_weather_result(Information* information, const String& payload);
    representing the multiples of a day, called day of the year or ordinal day number */
 int parse_world_clock_result(const String& payload);
 
+/* Return the Day of year number */
+int parse_world_time_result(const String& payload);
+
 #endif /* _TEXAS_PARSE_H_ */
