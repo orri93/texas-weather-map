@@ -28,10 +28,10 @@
 #define MAXIMUM_CLOUDS                  100.0  /* % */
 
 #define MINIMUM_RAIN_1H                   0.0  /* mm */
-#define MAXIMUM_RAIN_1H                 300.0  /* mm */
+#define MAXIMUM_RAIN_1H                  50.0  /* mm */
 
 #define MINIMUM_RAIN_3H                   0.0  /* mm */
-#define MAXIMUM_RAIN_3H                 600.0  /* mm */
+#define MAXIMUM_RAIN_3H                 150.0  /* mm */
 
 gos_scale scale_temperature;
 gos_scale scale_temperature_winter;
